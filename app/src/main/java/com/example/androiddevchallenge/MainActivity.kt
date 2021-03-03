@@ -19,12 +19,18 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import com.example.androiddevchallenge.models.Puppy
+import com.example.androiddevchallenge.ui.components.PuppyDetail
 import com.example.androiddevchallenge.ui.components.PuppyRow
 import com.example.androiddevchallenge.ui.components.StaggeredVerticalGrid
 import com.example.androiddevchallenge.ui.theme.MyTheme
@@ -33,22 +39,42 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyTheme {
-                Surface(color = MaterialTheme.colors.background) {
-                    PuppyList(puppies)
-                }
+            MyApp(puppies)
+        }
+    }
+}
+
+@Composable
+fun MyApp(puppies: List<Puppy>) {
+    val navController = rememberNavController()
+    MyTheme {
+        NavHost(navController, startDestination = "home") {
+            composable("home") { PuppyGridView(puppies = puppies, navController = navController) }
+            composable(
+                "puppy/{puppyId}",
+                arguments = listOf(navArgument("puppyId") { type = NavType.IntType })
+            ) { backstackEntry ->
+                PuppyDetail(
+                    puppyId = backstackEntry.arguments?.getInt("puppyId") ?: 0
+                )
             }
         }
     }
 }
 
 @Composable
-fun PuppyList(puppies: List<Puppy>) {
+fun PuppyGridView(
+    puppies: List<Puppy>,
+    navController: NavHostController
+) {
     LazyColumn {
         item {
             StaggeredVerticalGrid(maxColumnWidth = 200.dp) {
                 for (puppy in puppies) {
-                    PuppyRow(puppy = puppy, onClick = { /*TODO*/ })
+                    PuppyRow(
+                        puppy = puppy,
+                        onClick = { navController.navigate("puppy/${puppy.id}") }
+                    )
                 }
             }
         }
@@ -59,12 +85,13 @@ fun PuppyList(puppies: List<Puppy>) {
 @Composable
 fun LightPreview() {
     MyTheme {
-        PuppyList(puppies)
+        MyApp(puppies)
     }
 }
 
 val puppies = listOf(
     Puppy(
+        id = 1,
         name = "Savanah",
         breed = "Shepherd",
         age = "Baby",
@@ -72,6 +99,7 @@ val puppies = listOf(
         description = "Hi, my name is Savanah. I am about 3 months old and am a sweet girl. I probably will weigh..."
     ),
     Puppy(
+        id = 2,
         name = "Ollie",
         breed = "Terrier",
         age = "Young",
@@ -79,6 +107,7 @@ val puppies = listOf(
         description = "Ollie is a cute and spunky 4 year old terrier mix, weighing in at 22 pounds.   Ollie loves his foster..."
     ),
     Puppy(
+        id = 3,
         name = "Sandy",
         breed = "Shepherd",
         age = "Baby",
@@ -86,6 +115,7 @@ val puppies = listOf(
         description = "Hi, my name is Sandy. I am about 3 months old and am a sweet girl. I probably will weigh..."
     ),
     Puppy(
+        id = 4,
         name = "Hedwig Broadway",
         breed = "Chinese Crested Dog",
         age = "Adult",
@@ -93,6 +123,7 @@ val puppies = listOf(
         description = "3 yr old, 15 lb Chinese Crested Powder Puff Mix (DNA TEST PENDING) for ADOPTION"
     ),
     Puppy(
+        id = 5,
         name = "Caramel",
         breed = "Shepherd",
         age = "Baby",
@@ -100,6 +131,7 @@ val puppies = listOf(
         description = "Hi, my name is Caramel. I am about 3 months old and am a sweet girl. I probably will weigh..."
     ),
     Puppy(
+        id = 6,
         name = "Ann",
         breed = "Husky",
         age = "Adult",

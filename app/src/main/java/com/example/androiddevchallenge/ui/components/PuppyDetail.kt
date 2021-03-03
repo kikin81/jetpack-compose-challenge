@@ -15,7 +15,6 @@
  */
 package com.example.androiddevchallenge.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,21 +32,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.androiddevchallenge.models.Puppy
 import com.example.androiddevchallenge.puppies
 import com.example.androiddevchallenge.ui.theme.MyTheme
 import com.example.androiddevchallenge.ui.theme.typography
 import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
-fun PuppyRow(
-    puppy: Puppy,
-    onClick: () -> Unit
-) {
+fun PuppyDetail(puppyId: Int) {
+    val puppy = puppies.first { it.id == puppyId }
     Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CoilImage(
@@ -55,12 +48,12 @@ fun PuppyRow(
             contentDescription = "Puppy image",
             fadeIn = true,
             modifier = Modifier
-                .height(180.dp)
+                .height(400.dp)
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(4.dp)),
             contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
         Text(
             puppy.name,
             style = typography.h6
@@ -76,18 +69,20 @@ fun PuppyRow(
                 style = typography.body2,
             )
         }
+        Text(
+            puppy.description,
+            style = typography.body2,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
 @Preview("Light Theme")
 @Composable
-fun PuppyListPreview() {
+fun PuppyDetailPreview() {
     MyTheme {
         Surface(color = MaterialTheme.colors.background) {
-            PuppyRow(
-                puppies[0],
-                onClick = { }
-            )
+            PuppyDetail(0)
         }
     }
 }
