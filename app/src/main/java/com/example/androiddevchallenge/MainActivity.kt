@@ -18,11 +18,14 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.androiddevchallenge.models.Puppy
+import com.example.androiddevchallenge.ui.components.PuppyRow
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -40,7 +43,20 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+        PuppyList(puppies)
+    }
+}
+
+@Composable
+fun PuppyList(puppies: List<Puppy>) {
+    val scrollState = rememberLazyListState()
+
+    LazyColumn(state = scrollState) {
+        items(puppies.size) {
+            for (puppy in puppies) {
+                PuppyRow(puppy = puppy, onClick = { /*TODO*/ })
+            }
+        }
     }
 }
 
@@ -59,3 +75,48 @@ fun DarkPreview() {
         MyApp()
     }
 }
+
+val puppies = listOf(
+    Puppy(
+        name = "Savanah",
+        breed = "Shepherd",
+        age = "Baby",
+        imageUrl = "https://dl5zpyw5k3jeb.cloudfront.net/photos/pets/50716352/4/?bust=1614748955&width=450",
+        description = "Hi, my name is Savanah. I am about 3 months old and am a sweet girl. I probably will weigh..."
+    ),
+    Puppy(
+        name = "Ollie",
+        breed = "Terrier",
+        age = "Young",
+        imageUrl = "https://dl5zpyw5k3jeb.cloudfront.net/photos/pets/50716186/2/crop/?bust=1614748687&width=450",
+        description = "Ollie is a cute and spunky 4 year old terrier mix, weighing in at 22 pounds.   Ollie loves his foster..."
+    ),
+    Puppy(
+        name = "Sandy",
+        breed = "Shepherd",
+        age = "Baby",
+        imageUrl = "https://dl5zpyw5k3jeb.cloudfront.net/photos/pets/50716329/1/?bust=1614747682&width=450",
+        description = "Hi, my name is Sandy. I am about 3 months old and am a sweet girl. I probably will weigh..."
+    ),
+    Puppy(
+        name = "Hedwig Broadway",
+        breed = "Chinese Crested Dog",
+        age = "Adult",
+        imageUrl = "https://dl5zpyw5k3jeb.cloudfront.net/photos/pets/50716333/1/?bust=1614748876&width=450",
+        description = "3 yr old, 15 lb Chinese Crested Powder Puff Mix (DNA TEST PENDING) for ADOPTION"
+    ),
+    Puppy(
+        name = "Caramel",
+        breed = "Shepherd",
+        age = "Baby",
+        imageUrl = "https://dl5zpyw5k3jeb.cloudfront.net/photos/pets/50716155/3/?bust=1614746578&width=450",
+        description = "Hi, my name is Caramel. I am about 3 months old and am a sweet girl. I probably will weigh..."
+    ),
+    Puppy(
+        name = "Ann",
+        breed = "Husky",
+        age = "Adult",
+        imageUrl = "https://dl5zpyw5k3jeb.cloudfront.net/photos/pets/50716313/1/?bust=1614747756&width=450",
+        description = "Hi, I'm Ann! I'm a 2 year old husky mix and i'm hoping to find my forever home soon. My..."
+    )
+)
