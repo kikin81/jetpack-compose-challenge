@@ -19,13 +19,14 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.models.Puppy
 import com.example.androiddevchallenge.ui.components.PuppyRow
+import com.example.androiddevchallenge.ui.components.StaggeredVerticalGrid
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -33,28 +34,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp()
+                Surface(color = MaterialTheme.colors.background) {
+                    PuppyList(puppies)
+                }
             }
         }
     }
 }
 
-// Start building your app here!
-@Composable
-fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        PuppyList(puppies)
-    }
-}
-
 @Composable
 fun PuppyList(puppies: List<Puppy>) {
-    val scrollState = rememberLazyListState()
-
-    LazyColumn(state = scrollState) {
-        items(puppies.size) {
-            for (puppy in puppies) {
-                PuppyRow(puppy = puppy, onClick = { /*TODO*/ })
+    LazyColumn {
+        item {
+            StaggeredVerticalGrid(maxColumnWidth = 200.dp) {
+                for (puppy in puppies) {
+                    PuppyRow(puppy = puppy, onClick = { /*TODO*/ })
+                }
             }
         }
     }
@@ -64,15 +59,7 @@ fun PuppyList(puppies: List<Puppy>) {
 @Composable
 fun LightPreview() {
     MyTheme {
-        MyApp()
-    }
-}
-
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun DarkPreview() {
-    MyTheme(darkTheme = true) {
-        MyApp()
+        PuppyList(puppies)
     }
 }
 
